@@ -151,3 +151,108 @@
 
 #Novo banco apenas para a análise de redes
   network <- carreira %>% select(AEO:EEC)
+
+
+#### Calcular Escores Brutos
+```{r}
+ListaEscores23 <- list(
+Burnout = c("BAT_WEX1", "BAT_WEX2", "BAT_WEX3", "BAT_WEX4", "BAT_WEX5", "BAT_WEX6", "BAT_WEX7", "BAT_WEX8", "BAT_WMD1", "BAT_WMD2", "BAT_WMD3", "BAT_WMD4", "BAT_WMD5", "BAT_WCC1", "BAT_WCC2", "BAT_WCC3", "BAT_WCC4", "BAT_WCC5", "BAT_WCE1", "BAT_WCE2", "BAT_WCE3", "BAT_WCE4", "BAT_WCE5"),
+Exhaustion = c("BAT_WEX1", "BAT_WEX2", "BAT_WEX3", "BAT_WEX4", "BAT_WEX5", "BAT_WEX6", "BAT_WEX7", "BAT_WEX8"),
+MentalDistance = c("BAT_WMD1", "BAT_WMD2", "BAT_WMD3", "BAT_WMD4", "BAT_WMD5"),
+EmotionalImpairment = c("BAT_WCE1", "BAT_WCE2", "BAT_WCE3", "BAT_WCE4", "BAT_WCE5"),
+CognitiveImpairment = c("BAT_WCC1", "BAT_WCC2", "BAT_WCC3", "BAT_WCC4", "BAT_WCC5"),
+WorkOverload = c("JDRQ_DWO1", "JDRQ_DWO2", "JDRQ_DWO3", "JDRQ_DWO4"),
+RoleConflict = c("JDRQ_DRC1", "JDRQ_DRC2", "JDRQ_DRC3"),
+InterpersonalConflicts = c("JDRQ_DC1", "JDRQ_DC2", "JDRQ_DC3", "JDRQ_DC4"),
+RoleClarity = c("JDRQ_RRC1", "JDRQ_RRC2", "JDRQ_RRC3"),
+CoworkersSupport = c("JDRQ_RCS1", "JDRQ_RCS2", "JDRQ_RCS3"),
+JobControl = c("JDRQ_RJC1", "JDRQ_RJC2", "JDRQ_RJC3", "JDRQ_RJC4", "JDRQ_RJC5", "JDRQ_RJC6", "JDRQ_RJC7"),
+WorkEngagement = c("UWES_1", "UWES_2", "UWES_3", "UWES_4", "UWES_5", "UWES_6", "UWES_7", "UWES_8", "UWES_9"),
+LifeSatisfaction = c("SV1", "SV2", "SV3", "SV4", "SV5"))
+
+# Soma os escores
+Escores23 <- scoreItems(ListaEscores23,Rel_BAT23)
+
+#View(Escores23)
+
+#Escores23$scores
+
+# Correlações
+cor(Escores23$scores, method="kendall")
+
+#For a more simple analysis, I used pearson correlation
+  #but you can substitute for spearman of kendall
+  #See help(cor)
+cor_data = cor(Escores23$scores, method = c("pearson"))
+
+#Here's a correlogram
+corrplot(cor_data)
+
+#Rounding output to 2 digits only
+rounded = round(cor_data, 2)
+
+#To hide the upper triangle use the following syntax
+upper<-rounded
+upper[upper.tri(rounded)]<-""
+upper<-as.data.frame(upper)
+upper
+
+
+#An APA table format
+  #If you put the filename = something it'll create a document with the table
+
+apa.cor.table(Escores23$scores, filename= "Correlation_Tables.doc", table.number=1,
+              show.conf.interval = FALSE, landscape = TRUE)
+```
+
+```{r}
+ListaEscores12 <- list(
+Burnout = c("BAT_WEX1", "BAT_WEX3", "BAT_WEX4", "BAT_WMD1", "BAT_WMD2", "BAT_WMD4", "BAT_WCC1", "BAT_WCC4", "BAT_WCC5", "BAT_WCE1", "BAT_WCE2", "BAT_WCE4"),
+Exhaustion = c("BAT_WEX1", "BAT_WEX3", "BAT_WEX4"),
+MentalDistance = c("BAT_WMD1", "BAT_WMD2", "BAT_WMD4"),
+EmotionalImpairment = c("BAT_WCE1", "BAT_WCE2", "BAT_WCE4"),
+CognitiveImpairment = c("BAT_WCC1", "BAT_WCC4", "BAT_WCC5"),
+WorkOverload = c("JDRQ_DWO1", "JDRQ_DWO2", "JDRQ_DWO3", "JDRQ_DWO4"),
+RoleConflict = c("JDRQ_DRC1", "JDRQ_DRC2", "JDRQ_DRC3"),
+InterpersonalConflicts = c("JDRQ_DC1", "JDRQ_DC2", "JDRQ_DC3", "JDRQ_DC4"),
+RoleClarity = c("JDRQ_RRC1", "JDRQ_RRC2", "JDRQ_RRC3"),
+CoworkersSupport = c("JDRQ_RCS1", "JDRQ_RCS2", "JDRQ_RCS3"),
+JobControl = c("JDRQ_RJC1", "JDRQ_RJC2", "JDRQ_RJC3", "JDRQ_RJC4", "JDRQ_RJC5", "JDRQ_RJC6", "JDRQ_RJC7"),
+WorkEngagement = c("UWES_1", "UWES_2", "UWES_3", "UWES_4", "UWES_5", "UWES_6", "UWES_7", "UWES_8", "UWES_9"),
+LifeSatisfaction = c("SV1", "SV2", "SV3", "SV4", "SV5"))
+
+# Soma os escores
+Escores12 <- scoreItems(ListaEscores12,Rel_BAT12)
+
+#View(Escores23)
+
+#Escores23$scores
+
+cor(Escores12$scores, method="kendall")
+
+# Syntaxe do Rafael Bastos para fazer as tabelas em APA
+#For a more simple analysis, I used pearson correlation
+  #but you can substitute for spearman of kendall
+  #See help(cor)
+cor_data12 = cor(Escores12$scores, method = c("pearson"))
+
+#Here's a correlogram
+corrplot(cor_data12)
+
+#Rounding output to 2 digits only
+rounded12 = round(cor_data12, 2)
+
+#To hide the upper triangle use the following syntax
+upper12<-rounded12
+upper12[upper.tri(rounded12)]<-""
+upper12<-as.data.frame(upper12)
+upper12
+
+
+#An APA table format 
+  #If you put the filename = something it'll create a document with the table
+
+apa.cor.table(Escores12$scores, filename= "Correlation_Tables20.doc", table.number=1,
+              show.conf.interval = T, landscape = F)
+
+```
